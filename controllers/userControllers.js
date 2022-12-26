@@ -64,4 +64,39 @@ const Add = async (req, res) => {
   }
 };
 
-module.exports = Add;
+const userLogin = async (req, res) => {
+  const { userEmail, userPassword } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email: userEmail, role: "user" });
+    if (!existingUser) {
+      res.status(404).send("User not found");
+    }
+    const matchPassword = await bcrypt.compare(
+      userPassword,
+      existingUser.password
+    );
+
+    if (!matchPassword) {
+      res.status(400).send("Invalid Credentials");
+    }
+    const token = jwt.sign(
+      { userEmail: existingUser.email, userId: existingUser._id },
+      process.env.SECRET1
+    );
+    res.status(201).json({
+      message: "User Logged in successfully",
+      token: token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
+module.exports = {
+    Add,
+    userLogin
+}
