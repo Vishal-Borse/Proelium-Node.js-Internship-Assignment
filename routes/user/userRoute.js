@@ -27,6 +27,6 @@ router.put("/update", authUser, Update);
 router.get("/viewAllUsers", authUser, viewAllUsers);
 
 //API for user to update another user
-router.post("/updateUser/:email", authUser, updateUser);
+router.put("/updateUser/:email", authUser, updateUser);
 
 module.exports = router;

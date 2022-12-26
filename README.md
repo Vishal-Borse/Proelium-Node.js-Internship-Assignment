@@ -1,7 +1,7 @@
 
-#  Roxiler Systems
+# Proelium Analytics Private Limited
 
-#####  _Backend Developer Internship Assignment_
+#####  _Node.js Development Internship Assignment_
 
 Name : Vishal Sambhaji Borse
 Contact : +917666045526
@@ -13,55 +13,30 @@ Gmail : borsev662@gmail.com
 
 - Node.js
 - Express.js
-- PostegreSQL
+- MongoDB
 
   
 #  Installation
 
 ####  Database
 
-1] In your local PostgreSQL shell, run following command to create Database
+1] Open your MongoDB shell
 
+2] Now open ternimal and run following command to start mongod server
 ```sh
-CREATE DATABASE roxiler;
+mongod
 ```
-
-2] Now the coonnect to created datavase
-
-```sh
-\c roxiler;
-```
-
-3] Create a table named "product_transaction" in current Database
-
-Install the dependencies and devDependencies and start the server.
-
-```sh
-CREATE TABLE product_transaction(
-	id INTEGER PRIMARY KEY,
-	title TEXT,
-	price FLOAT,
-	description TEXT,
-	category TEXT,
-	image TEXT,
-	sold BOOLEAN,
-	dateOfSale TIMESTAMP
-);
-```
-
 ####  Dependencies
 
-4] Run following Command in the ternimal to install all required dependecies
+3] Run following Command in the ternimal to install all required dependecies
 
 ```sh
 npm install
 ```
 
-5] Create .env file and copy contents of .env.sample and paste into .env file
+4] Create .env file and copy contents of .env.sample and paste into .env file
 
-6] Fill required data in .env file.
-
-  
+5] Fill required data in .env file.
 
 ####  For production
 
@@ -79,45 +54,117 @@ npm start
 npm run dev
 ```
 
-####  APIs
+# APIs
+####  For User
 
-1} To Fetch data from URl and Insert into the database
-GET request:
+**1} To add yourself as a User**
+POST request:
+Request Body = { firstName, middleName, lastName, userEmail, userPassword, confirmUserPassword, userDepartment }
 ```sh
-localhost:8081/initialize
+localhost:3000/user/add
 ```
-2} To get total sale amount of particular month
-GET request:
+**2} To login us a user**
+POST request:
+Request Body = {  userEmail, userPassword }
 ```sh
-localhost:8081/statistics/saleAmount?month=<month_name>
+localhost:3000/user/login
 ```
+_Before Accessing all below APIs make sure that you have logged In and get token_
+_While making request, in the headers_
+_Add_   **key : Authorization and value : Bearer<space><token>**
 
-3} To get total sold items of particular month
+**3} To view self data**
 GET request:
 ```sh
-localhost:8081/statistics/soldItems?month=<month_name>
-```
-
-4} To get total not sold items of particular month
-GET request:
-```sh
-localhost:8081/statistics/notSoldItems?month=<month_name>
-```
-
-5} To get piechart of particular month
-GET request:
-```sh
-localhost:8081/visualize/piechart?month=<month_name>
+localhost:3000/user/view
 ```
 
-6} To get barchart of particular month
-GET request:
+**4} To update your data**
+PUT request:
+In the request body put data to be updated
+Request Body = { firstName, middleName, lastName, userDepartment  }
 ```sh
-localhost:8081/visualize/barchart?month=<month_name>
+localhost:3000/user/update
 ```
 
-7} To get all data of particular month
+**5} To get data of all Users**
 GET request:
 ```sh
-localhost:8081/all?month=<month_name>
+localhost:300/user/viewAllUsers
 ```
+
+**6} To update data of other user**
+PUT request:
+In the request body put data to be updated
+Request Body = { firstName, middleName, lastName, userDepartment }
+```sh
+localhost:3000/user/updateUser/<email_of_person_whose_data_is_to_update>
+```
+
+####  For Admin
+
+**1} To add yourself as a Admin**
+POST request:
+Request Body = { firstName, middleName, lastName, adminEmail, adminPassword, confirmAdminPassword, adminDepartment }
+```sh
+localhost:3000/admin/add
+```
+**2} To login us a Admin**
+POST request:
+Request Body = {  adminEmail, adminPassword }
+```sh
+localhost:3000/admin/login
+```
+_Before Accessing all below APIs make sure that you have logged In and get token_
+_While making request, in the headers_
+_Add_   **key : Authorization and value : Bearer<space><token>**
+
+**3} To view self data**
+GET request:
+```sh
+localhost:3000/admin/view
+```
+
+**4} To update your data**
+PUT request:
+In the request body put data to be updated
+Request Body = { firstName, middleName, lastName, adminDepartment  }
+```sh
+localhost:3000/admin/update
+```
+**5} To add new user**
+POST request:
+In the request body put data of new user
+Request Body = { firstName, middleName, lastName,userEmail, userPassword, confirmUserPassword, userDepartment, }
+```sh
+localhost:3000/admin/addUser
+```
+**6} To add new admin**
+POST request:
+In the request body put data of new admin
+Request Body = { firstName, middleName, lastName, adminEmail, adminPassword, confirmAdminPassword, adminDepartment }
+```sh
+localhost:3000/admin/addAdmin
+```
+
+**7} To view data of all users/admins/both**
+GET request:
+```sh
+localhost:3000/admin/viewAll?role=<admin-for admins,user-for users, all-for both>
+```
+**8} To update data of any user**
+PUT request:
+In the request body put data to be updated
+Request Body = { firstName, middleName, lastName, userDepartment }
+```sh
+localhost:3000/admin/updateUser/<email_of_person_whose_data_is_to_update>
+```
+**9} To update data of other admin**
+PUT request:
+In the request body put data to be updated
+Request Body = { firstName, middleName, lastName, adminDepartment }
+```sh
+localhost:3000/admin/updateUser/<email_of_person_whose_data_is_to_update>
+```
+
+
