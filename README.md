@@ -58,7 +58,7 @@ npm run dev
 ####  For User
 
 **1} To add yourself as a User**
-POST request:
+- POST request:
 Request Body = { firstName, middleName, lastName, userEmail, userPassword, confirmUserPassword, userDepartment }
 ```sh
 localhost:3000/user/add
