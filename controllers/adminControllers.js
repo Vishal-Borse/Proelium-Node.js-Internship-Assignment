@@ -4,27 +4,27 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/usersSchema");
 
 const LoginAdmin = async (req, res) => {
-  const { userEmail, userPassword } = req.body;
+  const { adminEmail, adminPassword } = req.body;
 
   try {
-    const existingUser = await User.findOne({ email: userEmail, role: "user" });
-    if (!existingUser) {
+    const existingAdmin = await User.findOne({ email: adminEmail, role: "admin" });
+    if (!existingAdmin) {
       res.status(404).send("User not found");
     }
     const matchPassword = await bcrypt.compare(
-      userPassword,
-      existingUser.password
+      adminPassword,
+      existingAdmin.password
     );
 
     if (!matchPassword) {
       res.status(400).send("Invalid Credentials");
     }
     const token = jwt.sign(
-      { userEmail: existingUser.email, userId: existingUser._id },
-      process.env.SECRET1
+      { adminEmail: existingAdmin.email, adminId: existingAdmin._id },
+      process.env.SECRET2
     );
     res.status(201).json({
-      message: "User Logged in successfully",
+      message: "Admin Logged in successfully",
       token: token,
     });
   } catch (error) {
