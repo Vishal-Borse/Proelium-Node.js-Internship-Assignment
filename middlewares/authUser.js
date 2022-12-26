@@ -2,21 +2,21 @@ const dotenv = require("dotenv");
 const jwt = require("jsonwebtoken");
 dotenv.config();
 
-//auth middleware for admins
-const authAdmin = async (req, res, next) => {
+//auth middleware for users
+const authUser = async (req, res, next) => {
   try {
     let token = req.headers.authorization.split(" ")[1];
     if (token) {
-      let user = jwt.verify(token, process.env.SECRET2);
-      req.adminid = user.adminId;
+      let user = jwt.verify(token, process.env.SECRET1);
+      req.userid = user.userId;
     } else {
-      res.status(401).send("Unauthorized Admin");
+      res.status(401).send("Unauthorized User");
     }
     next();
   } catch (error) {
     console.error(error);
-    res.status(401).send("Unauthorized Admin");
+    res.status(401).send("Unauthorized User");
   }
 };
 
-module.exports = authAdmin;
+module.exports = authUser;

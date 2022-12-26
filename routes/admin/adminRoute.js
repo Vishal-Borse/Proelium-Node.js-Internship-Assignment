@@ -14,7 +14,7 @@ const {
 } = require("../../controllers/adminControllers");
 
 //Login API for Admins
-router.post("/login", loginAdmin);
+router.post("/login", LoginAdmin);
 
 //API for add admin
 router.post("/add", Add);

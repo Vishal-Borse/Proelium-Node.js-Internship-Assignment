@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const jwt = require("jsonwebtoken");
-const User = require("../models/users");
+const User = require("../models/usersSchema");
 
 const LoginAdmin = async (req, res) => {
   const { userEmail, userPassword } = req.body;
