@@ -3,6 +3,38 @@ const saltRounds = 10;
 const jwt = require("jsonwebtoken");
 const User = require("../models/usersSchema");
 
+const userLogin = async (req, res) => {
+  const { userEmail, userPassword } = req.body;
+
+  try {
+    const existingUser = await User.findOne({ email: userEmail, role: "user" });
+    if (!existingUser) {
+      res.status(404).send("User not found");
+    }
+    const matchPassword = await bcrypt.compare(
+      userPassword,
+      existingUser.password
+    );
+
+    if (!matchPassword) {
+      res.status(400).send("Invalid Credentials");
+    }
+    const token = jwt.sign(
+      { userEmail: existingUser.email, userId: existingUser._id },
+      process.env.SECRET1
+    );
+    res.status(201).json({
+      message: "User Logged in successfully",
+      token: token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
 const Add = async (req, res) => {
   const {
     firstName,
@@ -64,29 +96,78 @@ const Add = async (req, res) => {
   }
 };
 
-const userLogin = async (req, res) => {
-  const { userEmail, userPassword } = req.body;
-
+const View = async (req, res) => {
   try {
-    const existingUser = await User.findOne({ email: userEmail, role: "user" });
-    if (!existingUser) {
-      res.status(404).send("User not found");
-    }
-    const matchPassword = await bcrypt.compare(
-      userPassword,
-      existingUser.password
-    );
+    const user = await User.findOne({ _id: req.userid });
+    res.status(200).json({
+      User: user,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
 
-    if (!matchPassword) {
-      res.status(400).send("Invalid Credentials");
-    }
-    const token = jwt.sign(
-      { userEmail: existingUser.email, userId: existingUser._id },
-      process.env.SECRET1
+const Update = async (req, res) => {
+  try {
+    const { firstName, middleName, lastName, userDepartment } = req.body;
+
+    const user = {
+      firstname: firstName,
+      middlename: middleName,
+      lastname: lastName,
+      department: userDepartment,
+      updatedtime: new Date().toLocaleTimeString(),
+    };
+    const result = await User.findByIdAndUpdate(req.userid, user, {
+      new: true,
+    });
+    res.status(201).json({
+      message: "User updated successfully",
+      updatedUser: result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
+const viewAllUsers = async (req, res) => {
+  try {
+    const result = await User.find({ role: "user" });
+    res.status(200).json({
+      Users: result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const { firstName, middleName, lastName, userDepartment } = req.body;
+
+    const user = {
+      firstname: firstName,
+      middlename: middleName,
+      lastname: lastName,
+      department: userDepartment,
+      updatedtime: new Date().toLocaleTimeString(),
+    };
+    const result = await User.findOneAndUpdate(
+      { email: req.params.email, role: "user" },
+      user
     );
     res.status(201).json({
-      message: "User Logged in successfully",
-      token: token,
+      message: "User updated successfully",
+      updatedUser: result,
     });
   } catch (error) {
     console.log(error);
@@ -97,6 +178,10 @@ const userLogin = async (req, res) => {
 };
 
 module.exports = {
-    Add,
-    userLogin
-}
+  userLogin,
+  Add,
+  View,
+  Update,
+  viewAllUsers,
+  updateUser,
+};
