@@ -3,7 +3,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", true);
 const app = express();
+
+const adminRoute = require("./routes/admin/adminRoute");
 const userRoute = require("./routes/user/userRoute");
+
 dotenv.config();
 app.use(express.static("public"));
 app.use(express.json());
@@ -19,4 +22,6 @@ mongoose
     console.log(error);
   });
 
-app.use("/user", userRoute);
+
+app.use("/admin",adminRoute);
+app.use("/user",userRoute);
